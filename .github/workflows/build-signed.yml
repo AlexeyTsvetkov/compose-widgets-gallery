@@ -27,10 +27,11 @@ jobs:
           security unlock-keychain -p $MY_PWD build.keychain
           security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $MY_PWD build.keychain
+          export KEYCHAIN=`pwd`/build.keychain
           ./gradlew :desktop:packageDmg \
                -Pcompose.desktop.mac.sign=true \
                -Pcompose.desktop.mac.signing.identity="Alexey Tsvetkov" \
-               -Pcompose.desktop.mac.signing.keychain=build.keychain
+               -Pcompose.desktop.mac.signing.keychain=$KEYCHAIN
 
       - name: Upload package
         uses: actions/upload-artifact@v2
