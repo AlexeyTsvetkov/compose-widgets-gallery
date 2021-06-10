@@ -19,18 +19,19 @@ jobs:
         env: 
           MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
           MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
-          MY_PWD: ${{ secrets.MY_PWD }}
+          KEYCHAIN_PWD: ${{ secrets.MY_PWD }}
         run: |
           echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
-          security create-keychain -p $MY_PWD /build.keychain 
-          security default-keychain -s /build.keychain
-          security unlock-keychain -p $MY_PWD /build.keychain
+          export KEYCHAIN=$(pwd)/build.keychain
+          security create-keychain -p $KEYCHAIN_PWD $KEYCHAIN
+          security default-keychain -s $KEYCHAIN
+          security unlock-keychain -p $KEYCHAIN_PWD $KEYCHAIN
           security import certificate.p12 -k /build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $MY_PWD /build.keychain
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PWD $KEYCHAIN
           ./gradlew :desktop:packageDmg \
                -Pcompose.desktop.mac.sign=true \
                -Pcompose.desktop.mac.signing.identity="Alexey Tsvetkov" \
-               -Pcompose.desktop.mac.signing.keychain=/build.keychain
+               -Pcompose.desktop.mac.signing.keychain=$KEYCHAIN
 
       - name: Upload package
         uses: actions/upload-artifact@v2
