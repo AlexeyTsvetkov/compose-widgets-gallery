@@ -23,11 +23,10 @@ jobs:
         run: |
           echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
           export KEYCHAIN=$(pwd)/build.keychain
-          echo $KEYCHAIN
           security create-keychain -p $KEYCHAIN_PWD $KEYCHAIN
           security default-keychain -s $KEYCHAIN
           security unlock-keychain -p $KEYCHAIN_PWD $KEYCHAIN
-          security import certificate.p12 -k /build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+          security import certificate.p12 -k $KEYCHAIN -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PWD $KEYCHAIN
           ./gradlew :desktop:packageDmg \
                -Pcompose.desktop.mac.sign=true \
