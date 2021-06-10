@@ -12,7 +12,7 @@ buildscript {
         classpath("org.jetbrains.compose:compose-gradle-plugin:0.5.0-build222")
         classpath("com.android.tools.build:gradle:4.0.1")
         // __KOTLIN_COMPOSE_VERSION__
-        classpath(kotlin("gradle-plugin", version = "1.5.0"))
+        classpath(kotlin("gradle-plugin", version = "1.5.10"))
     }
 }
 
