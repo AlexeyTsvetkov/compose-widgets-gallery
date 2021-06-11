@@ -31,8 +31,8 @@ jobs:
           ./gradlew :desktop:notarizeDmg \
                -Pcompose.desktop.mac.sign=true \
                -Pcompose.desktop.mac.signing.identity="{{ secrets.APPLE_SIGN_ID }}" \
-               -Pcompose.desktop.mac.notarization.appleID={{ secrets.APPLE_ID }} \
-               -Pcompose.desktop.mac.notarization.password={{ secrets.NOTARIZATION_PWD }} \
+               -Pcompose.desktop.mac.notarization.appleID="{{ secrets.APPLE_ID }}" \
+               -Pcompose.desktop.mac.notarization.password="{{ secrets.NOTARIZATION_PWD }}" \
                -Pcompose.desktop.mac.signing.keychain=$KEYCHAIN
 
       - name: Upload package
