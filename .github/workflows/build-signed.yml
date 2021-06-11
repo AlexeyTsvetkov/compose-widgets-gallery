@@ -28,9 +28,11 @@ jobs:
           security unlock-keychain -p $KEYCHAIN_PWD $KEYCHAIN
           security import certificate.p12 -k $KEYCHAIN -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PWD $KEYCHAIN
-          ./gradlew :desktop:packageDmg \
+          ./gradlew :desktop:notarizeDmg \
                -Pcompose.desktop.mac.sign=true \
-               -Pcompose.desktop.mac.signing.identity="Alexey Tsvetkov" \
+               -Pcompose.desktop.mac.signing.identity={{ secrets.SIGN_IDENTITY }} \
+               -Pcompose.desktop.mac.notarization.appleID={{ secrets.APPLE_ID }} \
+               -Pcompose.desktop.mac.notarization.password={{ secrets.NOTARIZATION_PWD }} \
                -Pcompose.desktop.mac.signing.keychain=$KEYCHAIN
 
       - name: Upload package
